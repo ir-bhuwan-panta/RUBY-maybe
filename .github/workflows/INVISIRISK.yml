@@ -2,6 +2,10 @@ name: Ruby build
 on:
   workflow_dispatch:
 
+env:
+  IR_API_URL: "https://app.stage.invisirisk.com"
+  IR_APP_TOKEN: ${{ secrets.IR_API_KEY_STAGE }}
+
 jobs:
   RUBY:
     runs-on: ubuntu-latest
@@ -10,8 +14,8 @@ jobs:
       - name: Setup PSE
         uses: invisirisk/pse-action@dev-test
         with:
-          api_url: "https://app.stage.invisirisk.com"
-          app_token: ${{ secrets.IR_API_KEY_L_STAGE }}
+          api_url: ${{env.IR_API_URL}}
+          app_token: ${{ env.IR_APP_TOKEN }}
           mode: docker-intercept
 
       - uses: actions/checkout@v4
@@ -29,7 +33,7 @@ jobs:
           
       - name: Cleanup PSE
         if: always()
-        uses: invisirisk/pse-action@dev-test
+        uses: invisirisk/pse-action@develop
         with:
           cleanup: "true"
           
@@ -40,8 +44,8 @@ jobs:
        if: always()
        steps:
        - name: Gather Status
-         uses: invisirisk/pse-action@dev-test
+         uses: invisirisk/pse-action@develop
          with:
-          api_url: "https://app.stage.invisirisk.com"
-          app_token: ${{ secrets.IR_API_KEY_L_STAGE }}
+          api_url: ${{env.IR_API_URL}}
+          app_token: ${{ env.IR_APP_TOKEN }}
           send_job_status: "true"
